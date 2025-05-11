@@ -113,4 +113,8 @@ public class Cliente {
                 "\n -Email: " + email +
                 "\n -Vip: " + esVip;
     }
+
+    public boolean esVip() {
+        return isEsVip();
+    }
 }

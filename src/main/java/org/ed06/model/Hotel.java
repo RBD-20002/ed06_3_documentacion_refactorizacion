@@ -31,13 +31,22 @@ public class Hotel {
 
     /**
      * Registra una nueva habitación en el hotel
-     * @param tipo Tipo de habitación que solo puede ser (SIMPLE, DOBLE, SUITE, LITERA)
-     * @param precioBase Precio establecido dependiendo del tipo de habitación
+     * @param tipo Tipo de habitación (SIMPLE, DOBLE, SUITE, LITERA)
+     * @param precioBase Precio base por noche de la habitación
+     * @return La habitación creada
      */
-    public void registrarHabitacion(Habitacion.TipoHabitacion tipo, double precioBase) {
+    public Habitacion registrarHabitacion(TipoHabitacion tipo, double precioBase) {
+        if (tipo == null) {
+            throw new IllegalArgumentException("El tipo de habitación no puede ser nulo");
+        }
+        if (precioBase <= 0) {
+            throw new IllegalArgumentException("El precio base debe ser mayor que cero");
+        }
+
         Habitacion habitacion = new Habitacion(habitaciones.size() + 1, tipo, precioBase, true);
         habitaciones.add(habitacion);
         reservasPorHabitacion.put(habitacion.getNumero(), new ArrayList<>());
+        return habitacion;
     }
 
     /**
@@ -45,7 +54,7 @@ public class Hotel {
      * @param tipos Lista de los tipos de habitaciones
      * @param preciosBase Lista de precios correspondientes
      */
-    public void registrarHabitaciones(List<Habitacion.TipoHabitacion> tipos, List<Double> preciosBase) {
+    public void registrarHabitaciones(List<TipoHabitacion> tipos, List<Double> preciosBase) {
         if (tipos.size() != preciosBase.size()) {
             throw new IllegalArgumentException("Las listas de tipos y precios deben tener el mismo tamaño");
         }
@@ -56,14 +65,17 @@ public class Hotel {
 
     /**
      * Lista todas las habitaciones del hotel
+     *
+     * @return
      */
-    public void listarHabitacionesDisponibles() {
+    public List<Habitacion> listarHabitacionesDisponibles() {
         for(Habitacion habitacion : habitaciones) {
             if(habitacion.isDisponible()) {
                 System.out.println("Habitación: " + habitacion.getNumero() +
                         " - Tipo: " + habitacion.getTipo() + " - Precio base: " + habitacion.getPrecioBase());
             }
         }
+        return null;
     }
 
     /**
@@ -90,7 +102,7 @@ public class Hotel {
      * @param fechaSalida Fecha de fin de la estadía
      * @return Número de habitación asignada o código de error negativo
      */
-    public int reservarHabitacion(int clienteId, Habitacion.TipoHabitacion tipo,
+    public int reservarHabitacion(int clienteId, TipoHabitacion tipo,
                                   LocalDate fechaEntrada, LocalDate fechaSalida) {
         if (habitaciones.isEmpty()) {
             System.out.println("No hay habitaciones en el hotel");
@@ -168,8 +180,10 @@ public class Hotel {
 
     /**
      * Lista todas las reservas del hotel
+     *
+     * @return
      */
-    public void listarReservas() {
+    public Map<Integer, List<Reserva>> listarReservas() {
         reservasPorHabitacion.forEach((key, value) -> {
             System.out.println("Habitación #" + key);
             value.forEach(reserva -> System.out.println(
@@ -177,29 +191,36 @@ public class Hotel {
                     + " - Fecha de entrada: " + reserva.getFechaInicio()
                     + " - Fecha de salida: " + reserva.getFechaFin()));
         });
+        return null;
     }
 
     //|---- GESTIÓN DE CLIENTES ----|
 
     /**
      * Lista todos los clientes registrados en el sistema
+     *
+     * @return
      */
-    public void listarClientes() {
+    public List<Cliente> listarClientes() {
         for(Cliente cliente : clientes.values()) {
             System.out.println("Cliente #" + cliente.id + " - Nombre: " +
                     cliente.nombre + " - DNI: " + cliente.dni + " - VIP: " + cliente.esVip);
         }
+        return null;
     }
 
     /**
      * Registra un nuevo cliente en el sistema del hotel
+     *
      * @param nombre Nombre del nuevo cliente
-     * @param email Email válido del cliente
-     * @param dni DNI válido con ek formato español
-     * @param esVip Indica si el cliente es VIP o si no es VIP
+     * @param email  Email válido del cliente
+     * @param dni    DNI válido con ek formato español
+     * @param esVip  Indica si el cliente es VIP o si no es VIP
+     * @return
      */
-    public void registrarCliente(String nombre, String email, String dni, boolean esVip) {
+    public Cliente registrarCliente(String nombre, String email, String dni, boolean esVip) {
         Cliente cliente = new Cliente(clientes.size() + 1, nombre, dni, email, esVip);
         clientes.put(cliente.id, cliente);
+        return cliente;
     }
 }

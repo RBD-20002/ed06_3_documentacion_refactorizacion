@@ -10,32 +10,6 @@ public class Habitacion {
     private boolean disponible;
 
     /**
-     * Enumeracion que representa los tipos de
-     * habitacion con su capacidad maxima
-     */
-    public enum TipoHabitacion {
-        SIMPLE(1),
-        DOBLE(2),
-        SUITE(4),
-        LITERAS(8);
-        private final int capacidadMaxima;
-        /**
-         * Constructor de la capacidad de habitaciones
-         * @param capacidadMaxima
-         */
-        TipoHabitacion(int capacidadMaxima) {
-            this.capacidadMaxima = capacidadMaxima;
-        }
-        /**
-         * Obtiene la capacidad maxima
-         * @return capacidad maxima
-         */
-        public int getCapacidadMaxima() {
-            return capacidadMaxima;
-        }
-    }
-
-    /**
      * Constructor para crear un objeto habitación
      * @param numero Número de habitación que séra único
      * @param tipo Tpo de habitación que solo puede ser (SUITE-LITERA-SIMPLE-DOBLE)
@@ -64,33 +38,22 @@ public class Habitacion {
     }
 
     /**
-     * Reserva la habitación si esta disponible
-     * @throws IllegalStateException si la habitación no esta disponible
+     * Reserva la habitación si está disponible
+     * @throws IllegalStateException si la habitación no está disponible
      */
     public void reservar() {
-        if (disponible) {
-            System.out.println("Habitación #" + numero + " ya reservada");
+        if (!disponible) {
+            throw new IllegalStateException("La habitación no está disponible");
         }
-        disponible = true;
+        disponible = false;
+        System.out.println("Habitación #" + numero + " reservada");
     }
 
     /**
-     * Modifica el estado a disponible de una habitación
+     * Libera la habitación, cambiando su estado a disponible
      */
     public void liberar() {
         disponible = true;
     }
 
-    /**
-     * Representa la información de la habitación
-     */
-    @Override
-    public String toString() {
-        return "|---------------------|" +
-                "\nHabitacion: " +
-                "\n -Numero: " + numero +
-                "\n -Tipo: " + tipo +
-                "\n -Precio Base: " + precioBase +
-                "\n -Disponible: " + disponible;
-    }
 }

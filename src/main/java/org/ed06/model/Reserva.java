@@ -52,23 +52,21 @@ public class Reserva {
     }
 
     /**
-     * Calcula el precio final con descuento aplicado
-     * @return Precio total después de descuentos correspondientes
+     * Calcula el precio final aplicando descuentos por VIP y estadías largas
+     * @return Precio total con descuentos aplicados
      */
     private double calcularPrecioFinal() {
-        int dias = fechaInicio.until(fechaFin).getDays();
+        int dias = (int) ChronoUnit.DAYS.between(fechaInicio, fechaFin);
         double precio = habitacion.getPrecioBase() * dias;
 
-        // Aplicar descuento VIP del 10% si corresponde
         if (cliente.isEsVip()) {
-            precio -= precio * 0.10;
+            precio *= 0.90; // Descuento 10% VIP
         }
 
-        // Aplicar descuento adicional del 5% para estadías largas
         if (dias > 7) {
-            precio -= precio * 0.05;
+            precio *= 0.95; // Descuento adicional 5% por estadía larga
         }
-        return precioTotal;
+        return precio;
     }
 
     /**
